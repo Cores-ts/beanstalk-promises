@@ -9,7 +9,11 @@ module.exports = class Beanstalk {
     this.defaultTTL = ttl || DEFAULT_TTL
   }
 
-  connect (host, port, reconnect) {
+  connect (host, port, reconnect, errHandling) {
+
+    //ADDING A DEFAULT ERROR HANDLING
+    errHandling = errHandling || console.error
+
     return new Promise((resolve, reject) => {
       try {
         const that = this                               // Becouse of this is not always this
@@ -31,7 +35,7 @@ module.exports = class Beanstalk {
           } else {
             if (that.debug) debug('No reconnection')
           }
-        }).connect()
+        }).on('error', errHandling).connect()
       } catch (err) {
         reject(err)
       }
